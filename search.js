@@ -1,7 +1,7 @@
 var $ = require('jquery');
 
 // Ensure this is configured in browswerify
-requre('jquery.swiftype.autocomplete');
+require('jquery.swiftype.autocomplete');
 
 // File system module, used to read in our template
 var fs = require('fs');
@@ -28,6 +28,7 @@ function Search () {
   $input.swiftype({ 
     engineKey: 'jaDGyzkR6iYHkfNsPpNK',
     resultLimit: 20,
+    noResultsMessage: true,
     resultRenderFunction: resultRenderFunction,
     renderFunction: renderResults
   });
@@ -44,27 +45,26 @@ function Search () {
 
   });
 
-}
+  /**
+   * Responsible for rendering incoming results using
+   * the `renderResults` function.
+   */
+  function resultRenderFunction (ctx, results) {
+    var $list = ctx.list,
+      config = ctx.config;
 
-module.exports Search;
+    var query = $input.val().toLowerCase();
 
-
-/**
- * Responsible for rendering incoming results using
- * the `renderResults` function.
- */
-function resultRenderFunction (ctx, results) {
-  var $list = ctx.list,
-    config = ctx.config;
-
-  var query = self.$activeInput.val().toLowerCase();
-
-  $.each(results, function(document_type, items) {
-    $.each(items, function(idx, item) {
-      ctx.registerResult($(config.renderFunction(query, document_type, item)).appendTo($list), item);
+    $.each(results, function(document_type, items) {
+      $.each(items, function(idx, item) {
+        ctx.registerResult($(config.renderFunction(query, document_type, item)).appendTo($list), item);
+      });
     });
-  });
+  }
+
 }
+
+module.exports = Search;
 
 
 /**
